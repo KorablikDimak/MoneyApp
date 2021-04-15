@@ -30,5 +30,5 @@ In the future I will add the ability to select a user, for each of which there w
 More detailed statistics with various infographics.
 Improving the interface to make it more intuitive.
 
-!([.NET]https://img.shields.io/badge/.NET%20FrameWork-4.6-informational)
-!([Nuget]https://img.shields.io/nuget/v/Microsoft.AspNet.Mvc?label=Nuget)
+![.NET](https://img.shields.io/badge/.NET%20FrameWork-4.6-informational)
+![Nuget](https://img.shields.io/nuget/v/Microsoft.AspNet.Mvc?label=Nuget)
