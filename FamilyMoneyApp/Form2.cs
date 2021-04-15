@@ -42,48 +42,59 @@ namespace NewFamilyMoney
             var modelP2 = new PlotModel { Title = "Статистика расходов" };
             dynamic seriesP2 = new PieSeries { StrokeThickness = 2.0, InsideLabelPosition = 0.5, AngleSpan = 360, StartAngle = 0, InnerDiameter = 0.4 };
 
-            double totalSpend = 0;
-            double totalProfit = 0;
-            HashSet<string> names = new HashSet<string>();
+            Dictionary<string, double[]> namesForChart = new Dictionary<string, double[]>();
 
             foreach (string[,] values in listOfValues)
             {
                 for (int i = 0; i < values.GetLength(0); i++)
                 {
-                    names.Add(values[i, 0]);
-                }
-            }
+                    string name = values[i, 0];
 
-            foreach (string name in names) 
-            {
-                foreach (string[,] values in listOfValues)
-                {
-                    for (int i = 0; i < values.GetLength(0); i++)
+                    if (namesForChart.ContainsKey(name))
                     {
-                        if (values[i, 4] == "spend" && values[i, 0] == name)
+                        double value;
+                        double.TryParse(values[i, 3] ?? "0", out value);
+
+                        if (values[i, 4] == "spend")
                         {
-                            double value;
-                            double.TryParse((values[i, 3] ?? "0").ToString(), out value);
-                            totalSpend += value;
+                            namesForChart[name][1] += value;
                         }
-                        else if (values[i, 4] == "profit" && values[i, 0] == name)
+                        else
                         {
-                            double value;
-                            double.TryParse((values[i, 3] ?? "0").ToString(), out value);
-                            totalProfit += value;
+                            namesForChart[name][0] += value;
+                        }
+                    }
+                    else
+                    {
+                        double value;
+                        double.TryParse(values[i, 3] ?? "0", out value);
+
+                        if (values[i, 4] == "spend")
+                        {
+                            namesForChart.Add(values[i, 0], new[] {0, value});
+                        }
+                        else
+                        {
+                            namesForChart.Add(values[i, 0], new[] {value, 0});
                         }
                     }
                 }
+            }
+
+            foreach (var name in namesForChart.Keys)
+            {
+                double totalProfit = namesForChart[name][0];
+                
                 if (totalProfit != 0)
                 {
                     seriesP1.Slices.Add(new PieSlice(name, totalProfit) { IsExploded = true });
                 }
+                double totalSpend = namesForChart[name][0];
+                
                 if (totalSpend != 0)
                 {
-                    seriesP2.Slices.Add(new PieSlice(name, totalSpend) { IsExploded = true });
+                    seriesP2.Slices.Add(new PieSlice(name, namesForChart[name][1]) { IsExploded = true });
                 }
-                totalSpend = 0;
-                totalProfit = 0;
             }
 
             modelP1.Series.Add(seriesP1);
