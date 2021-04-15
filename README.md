@@ -32,3 +32,5 @@ Improving the interface to make it more intuitive.
 
 ![.NET](https://img.shields.io/badge/.NET%20FrameWork-4.6-informational)
 ![Nuget](https://img.shields.io/nuget/v/Microsoft.AspNet.Mvc?label=Nuget)
+![NLog](https://img.shields.io/badge/NLog-4.7.9-red)
+![OxyPlot](https://img.shields.io/badge/OxyPlot-2.1.0-brightgreen)
