@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using NLog;
 
 namespace NewFamilyMoney
@@ -24,7 +19,6 @@ namespace NewFamilyMoney
         {
             InitializeComponent();
             
-            treeView1.Nodes.Clear();
             LoadTree();
             
             newDateTime = DateTime.Today;
@@ -98,14 +92,24 @@ namespace NewFamilyMoney
         private void LoadTree()
         {
             string filename = "save//treeview.txt";
-            using (Stream file = File.Open(filename, FileMode.Open))
+            
+            try
             {
-                BinaryFormatter bf = new BinaryFormatter();
-                object obj = bf.Deserialize(file);
-                TreeNode[] nodes = (obj as IEnumerable<TreeNode>).ToArray();
-                treeView1.Nodes.AddRange(nodes);
+                using (Stream file = File.Open(filename, FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    object obj = bf.Deserialize(file);
+                    TreeNode[] nodes = (obj as IEnumerable<TreeNode>).ToArray();
+                    
+                    treeView1.Nodes.Clear();
+                    treeView1.Nodes.AddRange(nodes);
 
-                logger.Info("загрузка древа");
+                    logger.Info("загрузка древа");
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.ToString());
             }
         }
 

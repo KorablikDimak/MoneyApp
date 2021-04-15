@@ -15,6 +15,12 @@ namespace NewFamilyMoney
         [STAThread]
         static void Main()
         {
+            DirectoryInfo dirInfo = new DirectoryInfo("save");
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
+            
             DateTime CutOffDate = DateTime.Now.AddDays(-5);
             DirectoryInfo di = new DirectoryInfo("logs\\");
             FileInfo[] fi = di.GetFiles();
