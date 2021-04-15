@@ -89,7 +89,7 @@ namespace NewFamilyMoney
                 {
                     seriesP1.Slices.Add(new PieSlice(name, totalProfit) { IsExploded = true });
                 }
-                double totalSpend = namesForChart[name][0];
+                double totalSpend = namesForChart[name][1];
                 
                 if (totalSpend != 0)
                 {
