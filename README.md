@@ -1,5 +1,10 @@
 # Family money app
 
+![.NET](https://img.shields.io/badge/.NET%20FrameWork-4.6-informational)
+![Nuget](https://img.shields.io/nuget/v/Microsoft.AspNet.Mvc?label=Nuget)
+![NLog](https://img.shields.io/badge/NLog-4.7.9-red)
+![OxyPlot](https://img.shields.io/badge/OxyPlot-2.1.0-brightgreen)
+
 ## Description
 An application project to calculate your budget. 
 Orientation of family people for whom it is important to count their spending and plan for the future.
@@ -30,7 +35,4 @@ In the future I will add the ability to select a user, for each of which there w
 More detailed statistics with various infographics.
 Improving the interface to make it more intuitive.
 
-![.NET](https://img.shields.io/badge/.NET%20FrameWork-4.6-informational)
-![Nuget](https://img.shields.io/nuget/v/Microsoft.AspNet.Mvc?label=Nuget)
-![NLog](https://img.shields.io/badge/NLog-4.7.9-red)
-![OxyPlot](https://img.shields.io/badge/OxyPlot-2.1.0-brightgreen)
+
