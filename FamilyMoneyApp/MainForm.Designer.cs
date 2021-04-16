@@ -1,6 +1,6 @@
 ﻿namespace NewFamilyMoney
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -236,6 +236,7 @@
             this.label3.TabIndex = 10;
             this.label3.Text = "Баланс:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // BalanceLabel
             // 
@@ -247,8 +248,9 @@
             this.BalanceLabel.TabIndex = 11;
             this.BalanceLabel.Text = "0 р";
             this.BalanceLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.BalanceLabel.Click += new System.EventHandler(this.BalanceLabel_Click);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -265,10 +267,10 @@
             this.Controls.Add(this.MainTable);
             this.Controls.Add(this.treeView1);
             this.Location = new System.Drawing.Point(15, 15);
-            this.Name = "Form1";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Shown += new System.EventHandler(this.Form1_Shown);
-            this.Click += new System.EventHandler(this.Form1_Click);
+            this.Name = "MainForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.Click += new System.EventHandler(this.MainForm_Click);
             ((System.ComponentModel.ISupportInitialize) (this.MainTable)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

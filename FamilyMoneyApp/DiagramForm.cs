@@ -7,18 +7,17 @@ using OxyPlot.Series;
 
 namespace NewFamilyMoney
 {
-    public partial class Form2 : Form
+    public partial class DiagramForm : Form
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        public DateTime newDateTime { get; private set; }
-        public List<string[,]> listOfValues { get; private set; }
-
-        public Form2(DateTime newDateTime)
+        private DateTime newDateTime;
+        private List<string[,]> listOfValues;
+        public DiagramForm(DateTime newDateTime)
         {
             this.newDateTime = newDateTime;
             listOfValues = new List<string[,]>();
             
-            listOfValues.Add(Program.LoadData(newDateTime));
+            listOfValues.Add(LoadFromFiles.LoadData(newDateTime));
 
             InitializeComponent();
             dateTimeForDiagrams.Value = this.newDateTime;
@@ -30,7 +29,7 @@ namespace NewFamilyMoney
             listOfValues.Clear();
             newDateTime = dateTimeForDiagrams.Value;
 
-            listOfValues.Add(Program.LoadData(newDateTime));
+            listOfValues.Add(LoadFromFiles.LoadData(newDateTime));
             GetDataForDiagrams();
             comboBox1.Text = "За сутки";
         }
@@ -143,8 +142,13 @@ namespace NewFamilyMoney
 
             for (int i = 0; i < days; i++)
             {
-                listOfValues.Add(Program.LoadData(newDateTime));
-                newDateTime = newDateTime.AddDays(-1);
+                string[,] values;
+                values = LoadFromFiles.LoadData(newDateTime);
+                if (values != null)
+                {
+                    listOfValues.Add(values);
+                    newDateTime = newDateTime.AddDays(-1);
+                }
             }
 
             GetDataForDiagrams();

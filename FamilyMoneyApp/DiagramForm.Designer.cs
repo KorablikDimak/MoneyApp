@@ -1,7 +1,7 @@
 ﻿
 namespace NewFamilyMoney
 {
-    partial class Form2
+    partial class DiagramForm
     {
         /// <summary>
         /// Required designer variable.
@@ -93,7 +93,7 @@ namespace NewFamilyMoney
             this.Controls.Add(this.dateTimeForDiagrams);
             this.Controls.Add(this.plotView2);
             this.Controls.Add(this.plotView1);
-            this.Name = "Form2";
+            this.Name = "DiagramForm";
             this.Text = "Form2";
             this.ResumeLayout(false);
 

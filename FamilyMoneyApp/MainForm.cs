@@ -9,67 +9,67 @@ using NLog;
 
 namespace NewFamilyMoney
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        public TreeNode CheckedNode { get; private set; }
-        public DateTime newDateTime { get; private set; }
-        public string spend { get; private set; }
-        public Form1()
+        private TreeNode checkedNode;
+        private DateTime newDateTime;
+        private string spend;
+        public MainForm()
         {
             InitializeComponent();
             
             LoadTree();
             
             newDateTime = DateTime.Today;
-            Program.LoadTable(newDateTime, MainTable);
+            LoadFromFiles.LoadTable(newDateTime, MainTable);
 
             ChangeDateTime.Value = newDateTime;
             UpdateLabel();
         }
 
-        private string getName()
+        private string GetName()
         {
             logger.Info("вызов getName");
 
-            var NameEdit = new NameEdit();
-            NameEdit.ShowDialog();
-            return NameEdit.name;
+            var nameEdit = new NameEdit();
+            nameEdit.ShowDialog();
+            return nameEdit.name;
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            TreeNode ClickedNode = treeView1.GetNodeAt(e.Location);
+            TreeNode clickedNode = treeView1.GetNodeAt(e.Location);
 
-            if (ClickedNode.Name == "ItemSpend")
+            if (clickedNode.Name == "ItemSpend")
             {
-                CreateItem(Color.Red, ClickedNode);
+                CreateItem(Color.Red, clickedNode);
             } 
             
-            else if (ClickedNode.Name == "ItemProfit")
+            else if (clickedNode.Name == "ItemProfit")
             {
-                CreateItem(Color.Green, ClickedNode);
+                CreateItem(Color.Green, clickedNode);
             }
         }
 
-        private void CreateItem(Color color, TreeNode ClickedNode)
+        private void CreateItem(Color color, TreeNode clickedNode)
         {
-            var ItemSetting = new ItemSetting(ClickedNode.Text);
-            ItemSetting.ShowDialog();
-            if (ItemSetting.endEnter)
+            var itemSetting = new ItemSetting(clickedNode.Text);
+            itemSetting.ShowDialog();
+            if (itemSetting.endEnter)
             {
                 int rowNumber = MainTable.Rows.Add();
-                MainTable.Rows[rowNumber].Cells["Names"].Value = ItemSetting.name;
-                MainTable.Rows[rowNumber].Cells["Prices"].Value = ItemSetting.price;
-                MainTable.Rows[rowNumber].Cells["Numbers"].Value = ItemSetting.total;
-                MainTable.Rows[rowNumber].Cells["Comments"].Value = ItemSetting.comment;
+                MainTable.Rows[rowNumber].Cells["Names"].Value = itemSetting.name;
+                MainTable.Rows[rowNumber].Cells["Prices"].Value = itemSetting.price;
+                MainTable.Rows[rowNumber].Cells["Numbers"].Value = itemSetting.total;
+                MainTable.Rows[rowNumber].Cells["Comments"].Value = itemSetting.comment;
                 MainTable.Rows[rowNumber].DefaultCellStyle.BackColor = color; 
                 MainTable.CurrentCell = null;
                 UpdateLabel();
             } 
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveTree();
             SaveTable();
@@ -141,9 +141,9 @@ namespace NewFamilyMoney
         {
             if (e.Button == MouseButtons.Right)
             {
-                CheckedNode = treeView1.GetNodeAt(e.Location);
-                settingContextMenu();
-                switch (CheckedNode.Name)
+                checkedNode = treeView1.GetNodeAt(e.Location);
+                SettingContextMenu();
+                switch (checkedNode.Name)
                 {
                     case "CategorySpend":
                         spend = "Spend";
@@ -185,7 +185,7 @@ namespace NewFamilyMoney
             }
         }
         
-        private void settingContextMenu()
+        private void SettingContextMenu()
         {
             contextMenuStrip1.Items[0].Visible = true;
             contextMenuStrip1.Items[1].Visible = true;
@@ -195,41 +195,41 @@ namespace NewFamilyMoney
 
         private void rename_Click(object sender, EventArgs e)
         {
-            string name = getName();
+            string name = GetName();
             if (name != null)
             {
-                CheckedNode.Text = name;
+                checkedNode.Text = name;
             }
             contextMenuStrip1.Close();
         }
 
         private void delete_Click(object sender, EventArgs e)
         {
-            CheckedNode.Remove();  
+            checkedNode.Remove();  
             contextMenuStrip1.Close();
         }
         
         private void AddCategory_Click(object sender, EventArgs e)
         {
-            string name = getName();
+            string name = GetName();
             if (name != null)
             {
-                TreeNode ItemNode = new TreeNode(name);
-                ItemNode.Name = "Category" + spend;
-                CheckedNode.Nodes.Add(ItemNode);
-                CheckedNode.Expand();
+                TreeNode itemNode = new TreeNode(name);
+                itemNode.Name = "Category" + spend;
+                checkedNode.Nodes.Add(itemNode);
+                checkedNode.Expand();
             }
         }
 
         private void Item_Click(object sender, EventArgs e)
         {
-            string name = getName();
+            string name = GetName();
             if (name != null)
             {
-                TreeNode ItemNode = new TreeNode(name);
-                ItemNode.Name = "Item" + spend;
-                CheckedNode.Nodes.Add(ItemNode); 
-                CheckedNode.Expand();
+                TreeNode itemNode = new TreeNode(name);
+                itemNode.Name = "Item" + spend;
+                checkedNode.Nodes.Add(itemNode); 
+                checkedNode.Expand();
             }
         }
 
@@ -289,7 +289,7 @@ namespace NewFamilyMoney
         {
             newDateTime = ChangeDateTime.Value;
             MainTable.Rows.Clear();
-            Program.LoadTable(newDateTime, MainTable);
+            LoadFromFiles.LoadTable(newDateTime, MainTable);
             MainTable.CurrentCell = null;
             UpdateLabel();
 
@@ -317,12 +317,12 @@ namespace NewFamilyMoney
             MainTable.CurrentCell = null;
         }
 
-        private void Form1_Click(object sender, EventArgs e)
+        private void MainForm_Click(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void Form1_Shown(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
@@ -342,10 +342,20 @@ namespace NewFamilyMoney
             logger.Info("открытие формы диаграмм");
 
             SaveTable();
-            var Form2 = new Form2(newDateTime);
-            Form2.ShowDialog();
+            var diagramForm = new DiagramForm(newDateTime);
+            diagramForm.ShowDialog();
 
             logger.Info("закрытие формы диаграмм");
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            MainTable.CurrentCell = null;
+        }
+
+        private void BalanceLabel_Click(object sender, EventArgs e)
+        {
+            MainTable.CurrentCell = null;
         }
     }
 }
