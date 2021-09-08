@@ -1,35 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using NLog;
 using OxyPlot;
 using OxyPlot.Series;
 
-namespace NewFamilyMoney
+namespace FamilyMoneyApp
 {
     public partial class DiagramForm : Form
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        private DateTime newDateTime;
-        private List<string[,]> listOfValues;
+        private DateTime _newDateTime;
+        private readonly List<string[,]> _listOfValues;
         public DiagramForm(DateTime newDateTime)
         {
-            this.newDateTime = newDateTime;
-            listOfValues = new List<string[,]>();
-            
-            listOfValues.Add(LoadFromFiles.LoadData(newDateTime));
+            _newDateTime = newDateTime;
+            _listOfValues = new List<string[,]> {LoadFromFiles.LoadData(newDateTime)};
 
             InitializeComponent();
-            dateTimeForDiagrams.Value = this.newDateTime;
+            dateTimeForDiagrams.Value = _newDateTime;
             GetDataForDiagrams();
         }
 
-        private void dateTimeForDiagrams_CloseUp(object sender, EventArgs e)
+        private void CloseUpDateTimeForDiagrams(object sender, EventArgs e)
         {
-            listOfValues.Clear();
-            newDateTime = dateTimeForDiagrams.Value;
+            _listOfValues.Clear();
+            _newDateTime = dateTimeForDiagrams.Value;
 
-            listOfValues.Add(LoadFromFiles.LoadData(newDateTime));
+            _listOfValues.Add(LoadFromFiles.LoadData(_newDateTime));
             GetDataForDiagrams();
             comboBox1.Text = "За сутки";
         }
@@ -41,9 +37,9 @@ namespace NewFamilyMoney
             var modelP2 = new PlotModel { Title = "Статистика расходов" };
             dynamic seriesP2 = new PieSeries { StrokeThickness = 2.0, InsideLabelPosition = 0.5, AngleSpan = 360, StartAngle = 0, InnerDiameter = 0.4 };
 
-            Dictionary<string, double[]> namesForChart = new Dictionary<string, double[]>();
+            var namesForChart = new Dictionary<string, double[]>();
 
-            foreach (string[,] values in listOfValues)
+            foreach (string[,] values in _listOfValues)
             {
                 for (int i = 0; i < values.GetLength(0); i++)
                 {
@@ -51,8 +47,7 @@ namespace NewFamilyMoney
 
                     if (namesForChart.ContainsKey(name))
                     {
-                        double value;
-                        double.TryParse(values[i, 3] ?? "0", out value);
+                        double.TryParse(values[i, 3] ?? "0", out var value);
 
                         if (values[i, 4] == "spend")
                         {
@@ -65,17 +60,9 @@ namespace NewFamilyMoney
                     }
                     else
                     {
-                        double value;
-                        double.TryParse(values[i, 3] ?? "0", out value);
+                        double.TryParse(values[i, 3] ?? "0", out var value);
 
-                        if (values[i, 4] == "spend")
-                        {
-                            namesForChart.Add(values[i, 0], new[] {0, value});
-                        }
-                        else
-                        {
-                            namesForChart.Add(values[i, 0], new[] {value, 0});
-                        }
+                        namesForChart.Add(values[i, 0], values[i, 4] == "spend" ? new[] {0, value} : new[] {value, 0});
                     }
                 }
             }
@@ -100,60 +87,51 @@ namespace NewFamilyMoney
             plotView1.Model = modelP1;
             modelP2.Series.Add(seriesP2);
             plotView2.Model = modelP2;
-
-            logger.Info("построение диаграммы успешно");
         }
 
-        private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
+        private void ComboBoxSelectionChangeCommitted(object sender, EventArgs e)
         {
-            logger.Info("изменено значение comboBox1");
-
-            if (comboBox1.SelectedIndex == 0)
+            switch (comboBox1.SelectedIndex)
             {
-                GetDiagramsForManyDays(1);
+                case 0:
+                    GetDiagramsForManyDays(1);
+                    break;
+                case 1:
+                    GetDiagramsForManyDays(7);
+                    break;
+                case 2:
+                    GetDiagramsForManyDays(30);
+                    break;
+                case 3:
+                    GetDiagramsForManyDays(365);
+                    break;
+                default:
+                {
+                    if (comboBox1.SelectedIndex == 3)
+                    {
+                        GetDiagramsForManyDays(10000);
+                    }
+
+                    break;
+                }
             }
 
-            else if (comboBox1.SelectedIndex == 1)
-            {
-                GetDiagramsForManyDays(7);
-            }
-
-            else if (comboBox1.SelectedIndex == 2)
-            {
-                GetDiagramsForManyDays(30);
-            }
-
-            else if (comboBox1.SelectedIndex == 3)
-            {
-                GetDiagramsForManyDays(365);
-            }
-
-            else if (comboBox1.SelectedIndex == 3)
-            {
-                GetDiagramsForManyDays(10000);
-            }
-
-            newDateTime = dateTimeForDiagrams.Value;
+            _newDateTime = dateTimeForDiagrams.Value;
         }
 
         private void GetDiagramsForManyDays(int days)
         {
-            listOfValues.Clear();
+            _listOfValues.Clear();
 
             for (int i = 0; i < days; i++)
             {
-                string[,] values;
-                values = LoadFromFiles.LoadData(newDateTime);
-                if (values != null)
-                {
-                    listOfValues.Add(values);
-                    newDateTime = newDateTime.AddDays(-1);
-                }
+                var values = LoadFromFiles.LoadData(_newDateTime);
+                if (values == null) continue;
+                _listOfValues.Add(values);
+                _newDateTime = _newDateTime.AddDays(-1);
             }
 
             GetDataForDiagrams();
-
-            logger.Info("успешная отработка функции для многодневной статистики");
         }
     }
 }

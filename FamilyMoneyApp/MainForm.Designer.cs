@@ -1,4 +1,4 @@
-﻿namespace NewFamilyMoney
+﻿namespace FamilyMoneyApp
 {
     partial class MainForm
     {
@@ -68,7 +68,7 @@
             this.treeView1.Size = new System.Drawing.Size(182, 469);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
-            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
+            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeViewNodeMouseDoubleClicked);
             // 
             // MainTable
             // 
@@ -84,9 +84,9 @@
             this.MainTable.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.MainTable.Size = new System.Drawing.Size(465, 435);
             this.MainTable.TabIndex = 0;
-            this.MainTable.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.MainTable_CellValueChanged);
-            this.MainTable.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.MainTable_UserDeletedRow);
-            this.MainTable.Leave += new System.EventHandler(this.MainTable_Leave);
+            this.MainTable.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.MainTableCellValueChanged);
+            this.MainTable.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.MainTableUserDeletedRow);
+            this.MainTable.Leave += new System.EventHandler(this.LeaveMainTable);
             // 
             // Names
             // 
@@ -135,28 +135,28 @@
             this.rename.Name = "rename";
             this.rename.Size = new System.Drawing.Size(188, 22);
             this.rename.Text = "Переименовать";
-            this.rename.Click += new System.EventHandler(this.rename_Click);
+            this.rename.Click += new System.EventHandler(this.RenameClicked);
             // 
             // delete
             // 
             this.delete.Name = "delete";
             this.delete.Size = new System.Drawing.Size(188, 22);
             this.delete.Text = "Удалить";
-            this.delete.Click += new System.EventHandler(this.delete_Click);
+            this.delete.Click += new System.EventHandler(this.DeleteClicked);
             // 
             // AddCategory
             // 
             this.AddCategory.Name = "AddCategory";
             this.AddCategory.Size = new System.Drawing.Size(188, 22);
             this.AddCategory.Text = "Добавить категорию";
-            this.AddCategory.Click += new System.EventHandler(this.AddCategory_Click);
+            this.AddCategory.Click += new System.EventHandler(this.AddCategoryClicked);
             // 
             // Item
             // 
             this.Item.Name = "Item";
             this.Item.Size = new System.Drawing.Size(188, 22);
             this.Item.Text = "Добавить статью";
-            this.Item.Click += new System.EventHandler(this.Item_Click);
+            this.Item.Click += new System.EventHandler(this.ItemClicked);
             // 
             // label1
             // 
@@ -168,7 +168,7 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Итого расходов за день:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.label1.Click += new System.EventHandler(this.Label1Clicked);
             // 
             // LabelSum
             // 
@@ -180,7 +180,7 @@
             this.LabelSum.TabIndex = 2;
             this.LabelSum.Text = "0 р";
             this.LabelSum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LabelSum.Click += new System.EventHandler(this.LabelSum_Click);
+            this.LabelSum.Click += new System.EventHandler(this.LabelSumClicked);
             // 
             // ChangeDateTime
             // 
@@ -189,8 +189,8 @@
             this.ChangeDateTime.Size = new System.Drawing.Size(182, 20);
             this.ChangeDateTime.TabIndex = 6;
             this.ChangeDateTime.Value = new System.DateTime(2021, 4, 9, 0, 0, 0, 0);
-            this.ChangeDateTime.CloseUp += new System.EventHandler(this.ChangeDateTime_CloseUp);
-            this.ChangeDateTime.DropDown += new System.EventHandler(this.ChangeDateTime_DropDown);
+            this.ChangeDateTime.CloseUp += new System.EventHandler(this.CloseUpChangeDateTime);
+            this.ChangeDateTime.DropDown += new System.EventHandler(this.DropDownChangeDateTime);
             // 
             // label2
             // 
@@ -202,7 +202,7 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Итого доходов за день:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Click += new System.EventHandler(this.label2_Click);
+            this.label2.Click += new System.EventHandler(this.Label2Clicked);
             // 
             // LabelProfit
             // 
@@ -214,7 +214,7 @@
             this.LabelProfit.TabIndex = 8;
             this.LabelProfit.Text = "0 р";
             this.LabelProfit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LabelProfit.Click += new System.EventHandler(this.LabelProfit_Click);
+            this.LabelProfit.Click += new System.EventHandler(this.LabelProfitClicked);
             // 
             // Statistic
             // 
@@ -224,7 +224,7 @@
             this.Statistic.TabIndex = 9;
             this.Statistic.Text = "Показать статистику";
             this.Statistic.UseVisualStyleBackColor = true;
-            this.Statistic.Click += new System.EventHandler(this.Statistic_Click);
+            this.Statistic.Click += new System.EventHandler(this.StatisticClicked);
             // 
             // label3
             // 
@@ -236,7 +236,7 @@
             this.label3.TabIndex = 10;
             this.label3.Text = "Баланс:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label3.Click += new System.EventHandler(this.label3_Click);
+            this.label3.Click += new System.EventHandler(this.Label3Clicked);
             // 
             // BalanceLabel
             // 
@@ -248,7 +248,7 @@
             this.BalanceLabel.TabIndex = 11;
             this.BalanceLabel.Text = "0 р";
             this.BalanceLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BalanceLabel.Click += new System.EventHandler(this.BalanceLabel_Click);
+            this.BalanceLabel.Click += new System.EventHandler(this.BalanceLabelClicked);
             // 
             // MainForm
             // 
@@ -268,9 +268,9 @@
             this.Controls.Add(this.treeView1);
             this.Location = new System.Drawing.Point(15, 15);
             this.Name = "MainForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.Click += new System.EventHandler(this.MainForm_Click);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
+            this.Shown += new System.EventHandler(this.ShowMainForm);
+            this.Click += new System.EventHandler(this.MainFormClicked);
             ((System.ComponentModel.ISupportInitialize) (this.MainTable)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

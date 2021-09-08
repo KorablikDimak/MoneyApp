@@ -1,5 +1,4 @@
-﻿
-namespace NewFamilyMoney
+﻿namespace FamilyMoneyApp
 {
     partial class DiagramForm
     {
@@ -65,7 +64,7 @@ namespace NewFamilyMoney
             this.dateTimeForDiagrams.Name = "dateTimeForDiagrams";
             this.dateTimeForDiagrams.Size = new System.Drawing.Size(145, 23);
             this.dateTimeForDiagrams.TabIndex = 2;
-            this.dateTimeForDiagrams.CloseUp += new System.EventHandler(this.dateTimeForDiagrams_CloseUp);
+            this.dateTimeForDiagrams.CloseUp += new System.EventHandler(this.CloseUpDateTimeForDiagrams);
             // 
             // comboBox1
             // 
@@ -82,7 +81,7 @@ namespace NewFamilyMoney
             this.comboBox1.Size = new System.Drawing.Size(129, 23);
             this.comboBox1.TabIndex = 3;
             this.comboBox1.Text = "За сутки";
-            this.comboBox1.SelectionChangeCommitted += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
+            this.comboBox1.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxSelectionChangeCommitted);
             // 
             // Form2
             // 

@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace NewFamilyMoney
+namespace FamilyMoneyApp
 {
     partial class ItemSetting
     {
@@ -32,14 +32,14 @@ namespace NewFamilyMoney
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.Name_e = new System.Windows.Forms.TextBox();
-            this.Attemt = new System.Windows.Forms.Button();
-            this.price_e = new System.Windows.Forms.TextBox();
+            this.nameTextBox = new System.Windows.Forms.TextBox();
+            this.attemt = new System.Windows.Forms.Button();
+            this.price = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.total_e = new System.Windows.Forms.TextBox();
+            this.total = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.Comment_e = new System.Windows.Forms.TextBox();
+            this.comment = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -51,30 +51,30 @@ namespace NewFamilyMoney
             this.label1.Text = "Название";
             this.label1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // Name_e
+            // nameTextBox
             // 
-            this.Name_e.Location = new System.Drawing.Point(12, 37);
-            this.Name_e.Name = "Name_e";
-            this.Name_e.Size = new System.Drawing.Size(100, 20);
-            this.Name_e.TabIndex = 1;
+            this.nameTextBox.Location = new System.Drawing.Point(12, 37);
+            this.nameTextBox.Name = "nameTextBox";
+            this.nameTextBox.Size = new System.Drawing.Size(100, 20);
+            this.nameTextBox.TabIndex = 1;
             // 
-            // Attemt
+            // attemt
             // 
-            this.Attemt.Location = new System.Drawing.Point(70, 139);
-            this.Attemt.Name = "Attemt";
-            this.Attemt.Size = new System.Drawing.Size(99, 22);
-            this.Attemt.TabIndex = 2;
-            this.Attemt.Text = "Принять";
-            this.Attemt.UseVisualStyleBackColor = true;
-            this.Attemt.Click += new System.EventHandler(this.Attemt_Click);
+            this.attemt.Location = new System.Drawing.Point(70, 139);
+            this.attemt.Name = "attemt";
+            this.attemt.Size = new System.Drawing.Size(99, 22);
+            this.attemt.TabIndex = 2;
+            this.attemt.Text = "Принять";
+            this.attemt.UseVisualStyleBackColor = true;
+            this.attemt.Click += new System.EventHandler(this.AttemtClicked);
             // 
-            // price_e
+            // price
             // 
-            this.price_e.Location = new System.Drawing.Point(124, 37);
-            this.price_e.Name = "price_e";
-            this.price_e.Size = new System.Drawing.Size(105, 20);
-            this.price_e.TabIndex = 3;
-            this.price_e.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.price_e_KeyPress_1);
+            this.price.Location = new System.Drawing.Point(124, 37);
+            this.price.Name = "price";
+            this.price.Size = new System.Drawing.Size(105, 20);
+            this.price.TabIndex = 3;
+            this.price.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PriceKeyPress);
             // 
             // label2
             // 
@@ -94,13 +94,13 @@ namespace NewFamilyMoney
             this.label3.Text = "Количество";
             this.label3.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // total_e
+            // total
             // 
-            this.total_e.Location = new System.Drawing.Point(12, 98);
-            this.total_e.Name = "total_e";
-            this.total_e.Size = new System.Drawing.Size(99, 20);
-            this.total_e.TabIndex = 6;
-            this.total_e.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.total_e_KeyPress);
+            this.total.Location = new System.Drawing.Point(12, 98);
+            this.total.Name = "total";
+            this.total.Size = new System.Drawing.Size(99, 20);
+            this.total.TabIndex = 6;
+            this.total.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TotalKeyPress);
             // 
             // label4
             // 
@@ -111,46 +111,46 @@ namespace NewFamilyMoney
             this.label4.Text = "Комментарий";
             this.label4.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // Comment_e
+            // comment
             // 
-            this.Comment_e.Location = new System.Drawing.Point(124, 98);
-            this.Comment_e.Name = "Comment_e";
-            this.Comment_e.Size = new System.Drawing.Size(105, 20);
-            this.Comment_e.TabIndex = 8;
+            this.comment.Location = new System.Drawing.Point(124, 98);
+            this.comment.Name = "comment";
+            this.comment.Size = new System.Drawing.Size(105, 20);
+            this.comment.TabIndex = 8;
             // 
             // ItemSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(241, 173);
-            this.Controls.Add(this.Comment_e);
+            this.Controls.Add(this.comment);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.total_e);
+            this.Controls.Add(this.total);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.price_e);
-            this.Controls.Add(this.Attemt);
-            this.Controls.Add(this.Name_e);
+            this.Controls.Add(this.price);
+            this.Controls.Add(this.attemt);
+            this.Controls.Add(this.nameTextBox);
             this.Controls.Add(this.label1);
             this.Name = "ItemSetting";
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.TextBox Comment_e;
+        private System.Windows.Forms.TextBox comment;
 
         private System.Windows.Forms.Label label4;
 
-        private System.Windows.Forms.TextBox total_e;
+        private System.Windows.Forms.TextBox total;
 
         private System.Windows.Forms.Label label3;
 
-        private System.Windows.Forms.Button Attemt;
+        private System.Windows.Forms.Button attemt;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox price_e;
+        private System.Windows.Forms.TextBox price;
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox Name_e;
+        private System.Windows.Forms.TextBox nameTextBox;
 
         #endregion
     }

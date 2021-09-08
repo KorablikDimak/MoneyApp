@@ -1,58 +1,52 @@
 using System;
 using System.Windows.Forms;
 
-namespace NewFamilyMoney
+namespace FamilyMoneyApp
 {
     public partial class ItemSetting : Form
     {
-        public string name { get; private set; }
-        public int total { get; private set; }
-        public double price { get; private set; }
-        public string comment { get; private set; }
-        public bool endEnter { get; private set; }
+        public new string Name { get; private set; }
+        public int Total { get; private set; }
+        public double Price { get; private set; }
+        public string Comment { get; private set; }
+        public bool EndEnter { get; private set; }
         public ItemSetting(string name)
         {
             InitializeComponent();
-            Name_e.Text = name;
-            endEnter = false;
-            price_e.Select();
+            nameTextBox.Text = name;
+            EndEnter = false;
+            price.Select();
         }
 
-        private void Attemt_Click(object sender, EventArgs e)
+        private void AttemtClicked(object sender, EventArgs e)
         {
-            if (CheckEnter())
-            {
-                name = Name_e.Text;
-                total = int.Parse(total_e.Text);
-                price = double.Parse(price_e.Text);
-                comment = Comment_e.Text;
-                endEnter = true;
-                Close();
-            }
+            if (!CheckEnter()) return;
+            Name = nameTextBox.Text;
+            Total = int.Parse(total.Text);
+            Price = double.Parse(price.Text);
+            Comment = comment.Text;
+            EndEnter = true;
+            Close();
         }
 
         private bool CheckEnter()
         {
-            if (Name_e.Text == "" || total_e.Text == "" || price_e.Text == "")
-            {
-                MessageBox.Show("Все поля кроме 'Комменарий' должны быть заполнены", "Ошибка ввода");
-                return false;
-            }
-
-            return true;
+            if (nameTextBox.Text != "" && total.Text != "" && price.Text != "") return true;
+            MessageBox.Show("Все поля кроме 'Комменарий' должны быть заполнены", "Ошибка ввода");
+            return false;
         }
 
-        private void price_e_KeyPress_1(object sender, KeyPressEventArgs e)
+        private void PriceKeyPress(object sender, KeyPressEventArgs e)
         {
-            CheckChar(e, price_e.Text);
+            CheckChar(e, price.Text);
         }
 
-        private void total_e_KeyPress(object sender, KeyPressEventArgs e)
+        private void TotalKeyPress(object sender, KeyPressEventArgs e)
         {
-            CheckChar(e, total_e.Text);
+            CheckChar(e, total.Text);
         }
 
-        private void CheckChar(KeyPressEventArgs e, string text)
+        private static void CheckChar(KeyPressEventArgs e, string text)
         {
             char key = e.KeyChar;
             if (key >= 47 && key <= 58 || key == ',' && !text.Contains(",") || key == 8) {}

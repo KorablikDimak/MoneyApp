@@ -1,47 +1,45 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using NLog;
 
-namespace NewFamilyMoney
+namespace FamilyMoneyApp
 {
-    static class Program
+    internal static class Program
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
-            DirectoryInfo dirInfo = new DirectoryInfo("save");
+            var dirInfo = new DirectoryInfo("save");
             if (!dirInfo.Exists)
             {
                 dirInfo.Create();
             }
             
-            DateTime CutOffDate = DateTime.Now.AddDays(-5);
-            DirectoryInfo di = new DirectoryInfo("logs\\");
-            FileInfo[] fi = di.GetFiles();
+            var cutOffDate = DateTime.Now.AddDays(-5);
+            var directoryInfo = new DirectoryInfo("logs\\");
+            FileInfo[] fileInfos = directoryInfo.GetFiles();
 
-            for (int i = 0; i < fi.Length; i++)
+            foreach (var fileInfo in fileInfos)
             {
-                if (fi[i].LastWriteTime < CutOffDate)
+                if (fileInfo.LastWriteTime < cutOffDate)
                 {
-                    File.Delete(fi[i].FullName);
+                    File.Delete(fileInfo.FullName);
                 }
             }
 
-            logger.Info("приложение запущено");
+            MyLogger.Logger.Info("приложение запущено");
 
             try
             {
                 Application.Run(new MainForm());
-                logger.Info("приложение окончило свою работу успешно");
+                MyLogger.Logger.Info("приложение окончило свою работу успешно");
             }
             catch (Exception e)
             {
-                logger.Error(e.ToString);
+                MyLogger.Logger.Error(e.ToString);
             }
         }
     }

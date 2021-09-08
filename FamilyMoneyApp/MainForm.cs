@@ -5,50 +5,46 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using NLog;
 
-namespace NewFamilyMoney
+namespace FamilyMoneyApp
 {
     public partial class MainForm : Form
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        private TreeNode checkedNode;
-        private DateTime newDateTime;
-        private string spend;
+        private TreeNode _checkedNode;
+        private DateTime _newDateTime;
+        private string _spend;
         public MainForm()
         {
             InitializeComponent();
             
             LoadTree();
             
-            newDateTime = DateTime.Today;
-            LoadFromFiles.LoadTable(newDateTime, MainTable);
+            _newDateTime = DateTime.Today;
+            LoadFromFiles.LoadTable(_newDateTime, MainTable);
 
-            ChangeDateTime.Value = newDateTime;
+            ChangeDateTime.Value = _newDateTime;
             UpdateLabel();
         }
 
-        private string GetName()
+        private static string GetName()
         {
-            logger.Info("вызов getName");
-
             var nameEdit = new NameEdit();
             nameEdit.ShowDialog();
-            return nameEdit.name;
+            return nameEdit.Name;
         }
 
-        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void TreeViewNodeMouseDoubleClicked(object sender, TreeNodeMouseClickEventArgs e)
         {
             TreeNode clickedNode = treeView1.GetNodeAt(e.Location);
 
-            if (clickedNode.Name == "ItemSpend")
+            switch (clickedNode.Name)
             {
-                CreateItem(Color.Red, clickedNode);
-            } 
-            
-            else if (clickedNode.Name == "ItemProfit")
-            {
-                CreateItem(Color.Green, clickedNode);
+                case "ItemSpend":
+                    CreateItem(Color.Red, clickedNode);
+                    break;
+                case "ItemProfit":
+                    CreateItem(Color.Green, clickedNode);
+                    break;
             }
         }
 
@@ -56,67 +52,63 @@ namespace NewFamilyMoney
         {
             var itemSetting = new ItemSetting(clickedNode.Text);
             itemSetting.ShowDialog();
-            if (itemSetting.endEnter)
-            {
-                int rowNumber = MainTable.Rows.Add();
-                MainTable.Rows[rowNumber].Cells["Names"].Value = itemSetting.name;
-                MainTable.Rows[rowNumber].Cells["Prices"].Value = itemSetting.price;
-                MainTable.Rows[rowNumber].Cells["Numbers"].Value = itemSetting.total;
-                MainTable.Rows[rowNumber].Cells["Comments"].Value = itemSetting.comment;
-                MainTable.Rows[rowNumber].DefaultCellStyle.BackColor = color; 
-                MainTable.CurrentCell = null;
-                UpdateLabel();
-            } 
+            if (!itemSetting.EndEnter) return;
+            int rowNumber = MainTable.Rows.Add();
+            MainTable.Rows[rowNumber].Cells["Names"].Value = itemSetting.Name;
+            MainTable.Rows[rowNumber].Cells["Prices"].Value = itemSetting.Price;
+            MainTable.Rows[rowNumber].Cells["Numbers"].Value = itemSetting.Total;
+            MainTable.Rows[rowNumber].Cells["Comments"].Value = itemSetting.Comment;
+            MainTable.Rows[rowNumber].DefaultCellStyle.BackColor = color; 
+            MainTable.CurrentCell = null;
+            UpdateLabel();
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainFormFormClosing(object sender, FormClosingEventArgs e)
         {
             SaveTree();
             SaveTable();
-
-            logger.Info("закрытие Form1");
         }
 
         private void SaveTree()
         {
-            string filename = "save//treeview.txt";
+            const string filename = "save//treeview.txt";
             using (Stream file = File.Open(filename, FileMode.Create))
             {
-                BinaryFormatter bf = new BinaryFormatter();
+                var bf = new BinaryFormatter();
                 bf.Serialize(file, treeView1.Nodes.Cast<TreeNode>().ToList());
 
-                logger.Info("сохранение древа");
+                MyLogger.Logger.Info("save tree");
             }
         }
 
         private void LoadTree()
         {
-            string filename = "save//treeview.txt";
-            
+            const string filename = "save//treeview.txt";
+
             try
             {
                 using (Stream file = File.Open(filename, FileMode.Open))
                 {
-                    BinaryFormatter bf = new BinaryFormatter();
+                    var bf = new BinaryFormatter();
                     object obj = bf.Deserialize(file);
-                    TreeNode[] nodes = (obj as IEnumerable<TreeNode>).ToArray();
+                    TreeNode[] nodes = (obj as IEnumerable<TreeNode> ?? throw new InvalidOperationException()).ToArray();
                     
                     treeView1.Nodes.Clear();
                     treeView1.Nodes.AddRange(nodes);
 
-                    logger.Info("загрузка древа");
+                    MyLogger.Logger.Info("load tree");
                 }
             }
             catch (Exception e)
             {
-                logger.Error(e.ToString());
+                MyLogger.Logger.Error(e.ToString());
             }
         }
 
         private void SaveTable()
         {
-            string filename = "save//MainTable" + newDateTime.Year + "_" + newDateTime.Month + "_" + newDateTime.Day + ".txt";
-            using (BinaryWriter bw = new BinaryWriter(File.Open(filename, FileMode.Create)))
+            string filename = "save//MainTable" + _newDateTime.Year + "_" + _newDateTime.Month + "_" + _newDateTime.Day + ".txt";
+            using (var bw = new BinaryWriter(File.Open(filename, FileMode.Create)))
             {
                 bw.Write(MainTable.Columns.Count);  
                 bw.Write(MainTable.Rows.Count);
@@ -134,58 +126,56 @@ namespace NewFamilyMoney
                 }
             }
 
-            logger.Info("таблица сохранена");
+            MyLogger.Logger.Info("table saved");
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button != MouseButtons.Right) return;
+            _checkedNode = treeView1.GetNodeAt(e.Location);
+            OpenSettingContextMenu();
+            switch (_checkedNode.Name)
             {
-                checkedNode = treeView1.GetNodeAt(e.Location);
-                SettingContextMenu();
-                switch (checkedNode.Name)
-                {
-                    case "CategorySpend":
-                        spend = "Spend";
-                        contextMenuStrip1.Items[3].Text = "Добавить статью расходов";
-                        contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
-                        break;
-                    case "CategoryProfit":
-                        spend = "Profit";
-                        contextMenuStrip1.Items[3].Text = "Добавить статью доходов";
-                        contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
-                        break;
-                    case "ItemSpend":
-                        spend = "Spend";
-                        contextMenuStrip1.Items[2].Visible = false;
-                        contextMenuStrip1.Items[3].Visible = false;
-                        contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
-                        break;
-                    case "ItemProfit":
-                        spend = "Profit";
-                        contextMenuStrip1.Items[2].Visible = false;
-                        contextMenuStrip1.Items[3].Visible = false;
-                        contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
-                        break;
-                    case "spend":
-                        spend = "Spend";
-                        contextMenuStrip1.Items[0].Visible = false;
-                        contextMenuStrip1.Items[1].Visible = false;
-                        contextMenuStrip1.Items[3].Text = "Добавить статью расходов";
-                        contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
-                        break;
-                    case "profit":
-                        spend = "Profit";
-                        contextMenuStrip1.Items[0].Visible = false;
-                        contextMenuStrip1.Items[1].Visible = false;
-                        contextMenuStrip1.Items[3].Text = "Добавить статью доходов";
-                        contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
-                        break;
-                }
+                case "CategorySpend":
+                    _spend = "Spend";
+                    contextMenuStrip1.Items[3].Text = "Добавить статью расходов";
+                    contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
+                    break;
+                case "CategoryProfit":
+                    _spend = "Profit";
+                    contextMenuStrip1.Items[3].Text = "Добавить статью доходов";
+                    contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
+                    break;
+                case "ItemSpend":
+                    _spend = "Spend";
+                    contextMenuStrip1.Items[2].Visible = false;
+                    contextMenuStrip1.Items[3].Visible = false;
+                    contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
+                    break;
+                case "ItemProfit":
+                    _spend = "Profit";
+                    contextMenuStrip1.Items[2].Visible = false;
+                    contextMenuStrip1.Items[3].Visible = false;
+                    contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
+                    break;
+                case "spend":
+                    _spend = "Spend";
+                    contextMenuStrip1.Items[0].Visible = false;
+                    contextMenuStrip1.Items[1].Visible = false;
+                    contextMenuStrip1.Items[3].Text = "Добавить статью расходов";
+                    contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
+                    break;
+                case "profit":
+                    _spend = "Profit";
+                    contextMenuStrip1.Items[0].Visible = false;
+                    contextMenuStrip1.Items[1].Visible = false;
+                    contextMenuStrip1.Items[3].Text = "Добавить статью доходов";
+                    contextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Right);
+                    break;
             }
         }
         
-        private void SettingContextMenu()
+        private void OpenSettingContextMenu()
         {
             contextMenuStrip1.Items[0].Visible = true;
             contextMenuStrip1.Items[1].Visible = true;
@@ -193,44 +183,38 @@ namespace NewFamilyMoney
             contextMenuStrip1.Items[3].Visible = true;
         }
 
-        private void rename_Click(object sender, EventArgs e)
+        private void RenameClicked(object sender, EventArgs e)
         {
             string name = GetName();
             if (name != null)
             {
-                checkedNode.Text = name;
+                _checkedNode.Text = name;
             }
             contextMenuStrip1.Close();
         }
 
-        private void delete_Click(object sender, EventArgs e)
+        private void DeleteClicked(object sender, EventArgs e)
         {
-            checkedNode.Remove();  
+            _checkedNode.Remove();  
             contextMenuStrip1.Close();
         }
         
-        private void AddCategory_Click(object sender, EventArgs e)
+        private void AddCategoryClicked(object sender, EventArgs e)
         {
             string name = GetName();
-            if (name != null)
-            {
-                TreeNode itemNode = new TreeNode(name);
-                itemNode.Name = "Category" + spend;
-                checkedNode.Nodes.Add(itemNode);
-                checkedNode.Expand();
-            }
+            if (name == null) return;
+            var itemNode = new TreeNode(name) {Name = "Category" + _spend};
+            _checkedNode.Nodes.Add(itemNode);
+            _checkedNode.Expand();
         }
 
-        private void Item_Click(object sender, EventArgs e)
+        private void ItemClicked(object sender, EventArgs e)
         {
             string name = GetName();
-            if (name != null)
-            {
-                TreeNode itemNode = new TreeNode(name);
-                itemNode.Name = "Item" + spend;
-                checkedNode.Nodes.Add(itemNode); 
-                checkedNode.Expand();
-            }
+            if (name == null) return;
+            var itemNode = new TreeNode(name) {Name = "Item" + _spend};
+            _checkedNode.Nodes.Add(itemNode); 
+            _checkedNode.Expand();
         }
 
         private void UpdateLabel()
@@ -241,15 +225,13 @@ namespace NewFamilyMoney
             {
                 if (row.Cells["Sum"].Value != null && row.DefaultCellStyle.BackColor.R == 255)
                 {
-                    double value;
-                    double.TryParse((row.Cells["Sum"].Value ?? "0").ToString(), out value);
+                    double.TryParse((row.Cells["Sum"].Value ?? "0").ToString(), out var value);
                     totalSpend += value;
                 }
                 
                 else if (row.Cells["Sum"].Value != null && row.DefaultCellStyle.BackColor.G == 128)
                 {
-                    double value;
-                    double.TryParse((row.Cells["Sum"].Value ?? "0").ToString(), out value);
+                    double.TryParse((row.Cells["Sum"].Value ?? "0").ToString(), out var value);
                     totalProfit += value;
                 }
             }
@@ -263,97 +245,87 @@ namespace NewFamilyMoney
         {
             foreach (DataGridViewRow row in MainTable.Rows)
             {
-                double prices;
-                double numbers;
-                double.TryParse((row.Cells["Prices"].Value ?? "0").ToString(), out prices);
-                double.TryParse((row.Cells["Numbers"].Value ?? "0").ToString(), out numbers);
+                double.TryParse((row.Cells["Prices"].Value ?? "0").ToString(), out var prices);
+                double.TryParse((row.Cells["Numbers"].Value ?? "0").ToString(), out var numbers);
                 row.Cells["Sum"].Value = prices * numbers;
             }
         }
 
-        private void MainTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void MainTableCellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             UpdateValues();
             UpdateLabel();
         }
 
-        private void MainTable_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        private void MainTableUserDeletedRow(object sender, DataGridViewRowEventArgs e)
         {
             UpdateLabel();   
             SaveTable();
-
-            logger.Info("удаление строки пользователем");
         }
 
-        private void ChangeDateTime_CloseUp(object sender, EventArgs e)
+        private void CloseUpChangeDateTime(object sender, EventArgs e)
         {
-            newDateTime = ChangeDateTime.Value;
+            _newDateTime = ChangeDateTime.Value;
             MainTable.Rows.Clear();
-            LoadFromFiles.LoadTable(newDateTime, MainTable);
+            LoadFromFiles.LoadTable(_newDateTime, MainTable);
             MainTable.CurrentCell = null;
             UpdateLabel();
-
-            logger.Info("смена даты в Form1");
         }
 
-        private void ChangeDateTime_DropDown(object sender, EventArgs e)
+        private void DropDownChangeDateTime(object sender, EventArgs e)
         {
-            newDateTime = ChangeDateTime.Value;
+            _newDateTime = ChangeDateTime.Value;
             SaveTable();
         }
         
-        private void MainTable_Leave(object sender, EventArgs e)
+        private void LeaveMainTable(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Label1Clicked(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void LabelSum_Click(object sender, EventArgs e)
+        private void LabelSumClicked(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void MainForm_Click(object sender, EventArgs e)
+        private void MainFormClicked(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void MainForm_Shown(object sender, EventArgs e)
+        private void ShowMainForm(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void LabelProfit_Click(object sender, EventArgs e)
+        private void LabelProfitClicked(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void Label2Clicked(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void Statistic_Click(object sender, EventArgs e)
+        private void StatisticClicked(object sender, EventArgs e)
         {
-            logger.Info("открытие формы диаграмм");
-
             SaveTable();
-            var diagramForm = new DiagramForm(newDateTime);
+            var diagramForm = new DiagramForm(_newDateTime);
             diagramForm.ShowDialog();
-
-            logger.Info("закрытие формы диаграмм");
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void Label3Clicked(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }
 
-        private void BalanceLabel_Click(object sender, EventArgs e)
+        private void BalanceLabelClicked(object sender, EventArgs e)
         {
             MainTable.CurrentCell = null;
         }

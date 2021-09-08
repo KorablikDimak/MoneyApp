@@ -1,13 +1,11 @@
 using System;
 using System.Windows.Forms;
-using NLog;
 
-namespace NewFamilyMoney
+namespace FamilyMoneyApp
 {
     public partial class NameEdit : Form
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        public string name { get; private set; }
+        public new string Name { get; private set; }
         public NameEdit()
         {
             InitializeComponent();
@@ -15,7 +13,7 @@ namespace NewFamilyMoney
             textBox1.Select();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ButtonClicked(object sender, EventArgs e)
         {
             if (textBox1.Text == "")
             {
@@ -23,7 +21,7 @@ namespace NewFamilyMoney
             }
             else
             {
-                name = textBox1.Text;
+                Name = textBox1.Text;
                 Close();
             }
         }

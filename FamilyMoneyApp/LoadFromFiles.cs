@@ -2,65 +2,55 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using NLog;
 
-namespace NewFamilyMoney
+namespace FamilyMoneyApp
 
 {
-    public class LoadFromFiles
+    public static class LoadFromFiles
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        
-        public static void LoadTable(DateTime newDateTime, DataGridView MainTable)
+        public static void LoadTable(DateTime newDateTime, DataGridView mainTable)
         {
-            logger.Info("начало загрузки MainTable");
-
-            MainTable.Rows.Clear();
+            mainTable.Rows.Clear();
             string filename = "save//MainTable" + newDateTime.Year + "_" + newDateTime.Month + "_" + newDateTime.Day + ".txt";
             try
             {
-                using (BinaryReader br = new BinaryReader(File.Open(filename, FileMode.Open)))
+                using (var br = new BinaryReader(File.Open(filename, FileMode.Open)))
                 {
-                    int columnsCount = br.ReadInt32();
-                    int rowsCount = br.ReadInt32();
+                    var columnsCount = br.ReadInt32();
+                    var rowsCount = br.ReadInt32();
                     for (int i = 0; i < rowsCount; i++)
                     {
-                        MainTable.Rows.Add();
+                        mainTable.Rows.Add();
                         for (int j = 0; j < columnsCount; j++)
                         {
-                            MainTable.Rows[i].Cells[j].Value = br.ReadString();
+                            mainTable.Rows[i].Cells[j].Value = br.ReadString();
                         }
-                        byte R = br.ReadByte();
-                        byte G = br.ReadByte();
-                        byte B = br.ReadByte();
-                        byte A = br.ReadByte();
-                        Color color = Color.FromArgb(A, R, G, B);
-                        MainTable.Rows[i].DefaultCellStyle.BackColor = color;
+                        byte r = br.ReadByte();
+                        byte g = br.ReadByte();
+                        byte b = br.ReadByte();
+                        byte a = br.ReadByte();
+                        var color = Color.FromArgb(a, r, g, b);
+                        mainTable.Rows[i].DefaultCellStyle.BackColor = color;
                     }
                 }
-
-                logger.Info("успешная загрузка MainTable");
             }
             catch (Exception e)
             {
-                MainTable.Rows.Clear();
-                using (BinaryWriter bw = new BinaryWriter(File.Open(filename, FileMode.Create))) { }
-
-                logger.Error(e.ToString);
+                mainTable.Rows.Clear();
+                using (var bw = new BinaryWriter(File.Open(filename, FileMode.Create))) { }
             }
         }
 
         public static string[,] LoadData(DateTime newDateTime)
         {
-            string[,] values;
             string filename = "save//MainTable" + newDateTime.Year + "_" + newDateTime.Month + "_" + newDateTime.Day + ".txt";
             try
             {
                 using (BinaryReader br = new BinaryReader(File.Open(filename, FileMode.Open)))
                 {
-                    int columnsCount = br.ReadInt32();
-                    int rowsCount = br.ReadInt32();
-                    values = new string[rowsCount, columnsCount];
+                    var columnsCount = br.ReadInt32();
+                    var rowsCount = br.ReadInt32();
+                    var values = new string[rowsCount, columnsCount];
 
                     for (int i = 0; i < rowsCount; i++)
                     {
@@ -69,11 +59,11 @@ namespace NewFamilyMoney
                            values[i, j]  = br.ReadString();
                         }
                         br.ReadString();
-                        byte R = br.ReadByte();
-                        byte G = br.ReadByte();
-                        byte B = br.ReadByte();
-                        byte A = br.ReadByte();
-                        if (R==255)
+                        byte r = br.ReadByte();
+                        byte g = br.ReadByte();
+                        byte b = br.ReadByte();
+                        byte a = br.ReadByte();
+                        if (r==255)
                         {
                             values[i, columnsCount - 1] = "spend";
                         }
@@ -87,9 +77,9 @@ namespace NewFamilyMoney
             }
             catch (Exception e)
             {
-                using (BinaryWriter bw = new BinaryWriter(File.Open(filename, FileMode.Create))) { }
+                using (var bw = new BinaryWriter(File.Open(filename, FileMode.Create))) { }
                 
-                logger.Error(e.ToString);
+                MyLogger.Logger.Error(e.ToString);
                 
                 return null;
             }
