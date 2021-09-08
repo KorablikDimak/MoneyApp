@@ -17,9 +17,12 @@ namespace FamilyMoneyApp
             {
                 dirInfo.Create();
             }
-            
             var cutOffDate = DateTime.Now.AddDays(-5);
             var directoryInfo = new DirectoryInfo("logs\\");
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
             FileInfo[] fileInfos = directoryInfo.GetFiles();
 
             foreach (var fileInfo in fileInfos)
