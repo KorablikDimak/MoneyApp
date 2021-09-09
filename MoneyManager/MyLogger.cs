@@ -1,6 +1,6 @@
 using NLog;
 
-namespace FamilyMoneyApp
+namespace MoneyManager
 {
     public static class MyLogger
     {

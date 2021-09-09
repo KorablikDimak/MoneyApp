@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace FamilyMoneyApp
+namespace MoneyManager
 {
     partial class ItemSetting
     {

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace FamilyMoneyApp
+namespace MoneyManager
 {
     internal static class Program
     {

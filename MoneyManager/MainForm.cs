@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
-namespace FamilyMoneyApp
+namespace MoneyManager
 {
     public partial class MainForm : Form
     {

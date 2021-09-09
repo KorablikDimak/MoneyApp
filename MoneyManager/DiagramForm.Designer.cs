@@ -1,4 +1,4 @@
-﻿namespace FamilyMoneyApp
+﻿namespace MoneyManager
 {
     partial class DiagramForm
     {

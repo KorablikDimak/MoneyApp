@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace FamilyMoneyApp
+namespace MoneyManager
 {
     public partial class NameEdit : Form
     {

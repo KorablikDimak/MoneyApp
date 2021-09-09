@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using OxyPlot;
 using OxyPlot.Series;
 
-namespace FamilyMoneyApp
+namespace MoneyManager
 {
     public partial class DiagramForm : Form
     {
