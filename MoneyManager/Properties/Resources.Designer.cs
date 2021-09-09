@@ -45,7 +45,7 @@ namespace FamilyMoneyApp.Properties
                 if ((resourceMan == null))
                 {
                     global::System.Resources.ResourceManager temp =
-                        new global::System.Resources.ResourceManager("FamilyMoneyApp.Properties.Resources",
+                        new global::System.Resources.ResourceManager("MoneyManager.Properties.Resources",
                             typeof(Resources).Assembly);
                     resourceMan = temp;
                 }

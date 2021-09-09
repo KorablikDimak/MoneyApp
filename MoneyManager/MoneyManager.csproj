@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{89E20CBD-2195-4282-9673-D7FF7953C57A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>FamilyMoneyApp</RootNamespace>
-    <AssemblyName>FamilyMoneyApp</AssemblyName>
+    <RootNamespace>MoneyManager</RootNamespace>
+    <AssemblyName>MoneyManager</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
