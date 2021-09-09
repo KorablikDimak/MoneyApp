@@ -1,21 +1,14 @@
-# Family money app
-
+# Money manager application
 ![.NET](https://img.shields.io/badge/.NET%20FrameWork-4.6-informational)
-![Nuget](https://img.shields.io/nuget/v/Microsoft.AspNet.Mvc?label=Nuget)
 ![NLog](https://img.shields.io/badge/NLog-4.7.9-red)
 ![OxyPlot](https://img.shields.io/badge/OxyPlot-2.1.0-brightgreen)
-
 ## Description
 An application project to calculate your budget. 
-Orientation of family people for whom it is important to count their spending and plan for the future.
-
-## Categories
+### Categories
 Adding categories and items of expenses / income is called using the context menu by clicking the right mouse button.
-
-## Table
+### Table
 The entry takes place in the table, which highlights expenses in `red` and incomes in `green`.
 You can make edits yourself, delete lines. Any update of the table is accompanied by a daily update of 'statistics'.
-
 ### Capabilities
 * Changing the date and entering data into the table for a specific date
 * View charts reflecting the percentage of spending
@@ -23,16 +16,9 @@ You can make edits yourself, delete lines. Any update of the table is accompanie
   * Collection of statistics for 7/30/365 days or for all time
 * Sorting data in a table
 * Fast work, loading, saving and updating occurring in a split second
-
+  * If there are no folders to save, they will be automatically created
+* The application uses the **OxyPlot** package to draw diagrams in statistics
 ## Logs
-Full logging of the program.
-To start logs, you need to place the configuration file in the directory `/ProjectName/bin/Debug/`.
-And create folders in this directory `logs` if it is not there.
-
-## Future
-The development of the project is possible.
-In the future I will add the ability to select a user, for each of which there will be separate information. 
-More detailed statistics with various infographics.
-Improving the interface to make it more intuitive.
-
-
+The application uses the **NLog** package to write logs to the `logs` folder in the main application directory. 
+If you want to use them in your works, then set to always `copy the source file` in the build parameters for the `NLog.confifg`.
+After five days, logs are automatically deleted
