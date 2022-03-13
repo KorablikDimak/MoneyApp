@@ -12,7 +12,7 @@ namespace MoneyManager
         [STAThread]
         private static void Main()
         {
-            var dirInfo = new DirectoryInfo("save");
+            var dirInfo = new DirectoryInfo("save\\");
             if (!dirInfo.Exists)
             {
                 dirInfo.Create();
@@ -33,12 +33,12 @@ namespace MoneyManager
                 }
             }
 
-            MyLogger.Logger.Info("приложение запущено");
+            MyLogger.Logger.Info("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 
             try
             {
                 Application.Run(new MainForm());
-                MyLogger.Logger.Info("приложение окончило свою работу успешно");
+                MyLogger.Logger.Info("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
             }
             catch (Exception e)
             {
