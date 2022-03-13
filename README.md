@@ -22,3 +22,5 @@ You can make edits yourself, delete lines. Any update of the table is accompanie
 The application uses the **NLog** package to write logs to the `logs` folder in the main application directory. 
 If you want to use them in your works, then set to always `copy the source file` in the build parameters for the `NLog.confifg`.
 After five days, logs are automatically deleted
+### Download
+You can download the archive with the attachment at the link [MoneyManager](https://disk.yandex.ru/d/PV0Yod2mB-3rWA)
